@@ -11,6 +11,8 @@ python3 weather_scraper.py <longitude> <latitude>
 import requests
 import sys
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
 
 # Function to retrieve weather forecast from OpenWeatherMap Forecast API
@@ -64,7 +66,9 @@ def main():
         print("Please enter valid Longitude, Latitude arguments")
         sys.exit()
 
-    api_key = "b21fc0b0e6006ec6b0c62372da738631"
+
+    load_dotenv()  # Load environment variables from .env file
+    api_key = os.getenv("API_KEY")
 
     forecast = get_forecast(longitude, latitude, api_key)
     print_forecast_info(forecast)
