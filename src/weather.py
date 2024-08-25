@@ -10,13 +10,12 @@ python3 weather_scraper.py <longitude> <latitude>
 """
 import requests
 import sys
-from datetime import datetime
 from dotenv import load_dotenv
 import os
 
 
 # Function to retrieve weather forecast from OpenWeatherMap Forecast API
-def get_forecast(longitude, latitude, api_key):
+def get_full_forecast(longitude, latitude, api_key):
     # Define the API endpoint
     url = f"http://api.openweathermap.org/data/2.5/forecast?lat={latitude}&lon={longitude}&appid={api_key}&units=metric"
     
@@ -56,22 +55,35 @@ def print_forecast_info(forecast):
 
     else:
         print("Failed to retrieve forecast data")
+        
+        
+def get_weather(api_key, longitude, latitude):
+    full_forecast = get_full_forecast(longitude, latitude, api_key)
+    
+    if full_forecast is not None:
+        # Get the forecast for the next 3 hours
+        next_3_hours_forecast = full_forecast['list'][0]
+        date = next_3_hours_forecast['dt_txt']  # "YYYY-MM-DD HH:MM:SS" format
+        wind_speed = next_3_hours_forecast['wind']['speed']
+        rain = next_3_hours_forecast.get('rain', {}).get('3h', 0)
+
+        return date, wind_speed, rain
+    else:
+        return None, None, None
+    
+    
+    
 
 def main():
-    # Read command-line args for lon, lat
-    if len(sys.argv) == 3:
-        longitude = sys.argv[1]  # Example: 18.647499
-        latitude = sys.argv[2]   # Example: -33.832500
-    else:
-        print("Please enter valid Longitude, Latitude arguments")
-        sys.exit()
-
 
     load_dotenv()  # Load environment variables from .env file
     api_key = os.getenv("API_KEY")
+    
+    date, wind_speed, rain = get_full_forecast(api_key, 18.647499, -33.832500)
+    
 
-    forecast = get_forecast(longitude, latitude, api_key)
-    print_forecast_info(forecast)
+    #forecast = get_full_forecast(longitude, latitude, api_key)
+    #print_forecast_info(forecast)
 
 
 if __name__ == "__main__":
