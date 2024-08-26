@@ -129,13 +129,13 @@ def display_table(cursor, table_name):
         # Print the table headers
         print(f"\n--- {table_name.upper()} TABLE ---")
         for column in cursor.description:
-            print(f"{column[0]:<15}", end="")
+            print(f"{column[0]:<23}", end="")
         print()
 
         # Print each row
         for row in rows:
             for value in row:
-                print(f"{str(value):<15}", end="")
+                print(f"{str(value):<23}", end="")
             print()
     else:
         print(f"\nNo data found in {table_name}.")

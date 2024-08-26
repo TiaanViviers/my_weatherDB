@@ -1,4 +1,4 @@
-import checkers_DB, get_weather
+import checkers_DB, weather
 import sqlite3
 from dotenv import load_dotenv
 import os
@@ -15,31 +15,35 @@ def main():
     # Get latest forecast readings
     update_readings(cursor, conn)
     
-
+    
+    
+# Loop through all shops in the shops table
 def update_readings(cursor, conn):
-    # Loop through all shops in the shops table
+    # Load environment variables from .env file
+    load_dotenv()  
+    api_key = os.getenv("API_KEY")
+    
+    
     cursor.execute("SELECT id, latitude, longitude FROM shops")
     shops = cursor.fetchall()
     
-    load_dotenv()  # Load environment variables from .env file
-    api_key = os.getenv("API_KEY")
 
     for shop in shops:
         shop_id, lat, lon = shop
         
         # Fetch weather data for the shop's location
-        weather_data = get_weather_data(lat, lon)
+        date, wind_speed, rain = weather.get_weather(api_key, lon, lat)
         
         # Determine if a warning should be triggered
-        warning = 1 if weather_data['rain_forecast'] > 70 or weather_data['wind_forecast'] > 30 else 0
+        if (rain > 0) or (wind_speed > 35):
+            warning = 1
+        else: warning = 0
         
         # Insert or update the weather data in the weather_forecast table
-        checkers_DB.insert_weather_data(cursor, shop_id, warning,
-                                        weather_data['date'], 
-                                        weather_data['rain_forecast'], 
-                                        weather_data['wind_forecast'])
+        checkers_DB.insert_weather_data(cursor, shop_id, warning, date, rain, wind_speed)
 
     # Commit the changes
+    checkers_DB.display_table(cursor, "weather_forecast")
     conn.commit()
     conn.close()
     
