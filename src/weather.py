@@ -58,8 +58,10 @@ def get_weather(api_key, longitude, latitude):
     
 
 if __name__ == "__main__":
+    # Test client
     load_dotenv()
     api_key = os.getenv("API_KEY")
+    
     date, wind_speed, rain = get_weather(api_key, 18.647499, -33.832500)
     print(f"date: {date} ; date type {type(date)}")
     print(f"wind_speed: {wind_speed} ; wind type {type(wind_speed)}")

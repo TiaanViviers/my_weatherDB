@@ -19,6 +19,13 @@ def main():
     
 # Loop through all shops in the shops table
 def update_readings(cursor, conn):
+    """
+    Function for updating the weather_forecast table using the weather API
+    
+    Args:
+        cursor (sqlite3.Cursor): The cursor object used to execute SQL commands in the database.
+        conn (sqlite3.connect): Connection to the sqlite3 Database
+    """
     # Load environment variables from .env file
     load_dotenv()  
     api_key = os.getenv("API_KEY")
@@ -42,7 +49,6 @@ def update_readings(cursor, conn):
         # Insert or update the weather data in the weather_forecast table
         checkers_DB.insert_weather_data(cursor, shop_id, warning, date, rain, wind_speed)
 
-    # Commit the changes
     checkers_DB.display_table(cursor, "weather_forecast")
     conn.commit()
     conn.close()

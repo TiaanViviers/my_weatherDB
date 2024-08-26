@@ -1,1 +1,24 @@
+# Ignore environment files
 .env
+
+# Ignore compiled Python files
+**/__pycache__
+__pycache__/
+*.pyc
+
+# Ignore SQLite database
+data/*.db
+
+# Ignore virtual environment
+venv/
+.venv/
+
+# Ignore system-specific files
+*.log
+.DS_Store
+
+# Ignore VSCode settings (if you use VSCode)
+.vscode/
+
+# Ignore Dash cache (if applicable)
+assets/.sass-cache/
