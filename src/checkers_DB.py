@@ -165,4 +165,6 @@ def run(cursor):
     
     
 if __name__ == '__main__':
-    run()
+    conn = sqlite3.connect('../data/checkers_shops.db')              
+    cursor = conn.cursor()
+    run(cursor)
